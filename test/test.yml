@@ -100,12 +100,12 @@ components:
         $ref: "#/components/schemas/Pet"
     Error:
       type: object
-      required:
-        - code
-        - message
       properties:
         code:
           type: integer
           format: int32
         message:
           type: string
+        required:
+          - code
+          - message

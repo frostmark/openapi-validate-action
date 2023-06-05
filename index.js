@@ -16,16 +16,15 @@ try {
     files.forEach(file => {
       core.info(`Validating file: ${file}`);
 
-      var error = validate(`${directory}/${file}`, {
+      validate(`${directory}/${file}`, {
         type: "yaml",
         wrap: Infinity
-      });
-
-      if (error) {
-        invalidFiles.push(file);
-      } else {
+      }).then(() => {
         validFiles.push(file);
-      }
+      }).catch(error => {
+        invalidFiles.push(file);
+        core.setFailed(`${file} is invalid\n${error.message}`);
+      });
     });
   })
 
@@ -36,12 +35,6 @@ try {
 }
 
 async function validate(file, options) {
-  var error;
-  try {
-    await api.validate(file, options);
-    core.info(`${file} is valid`);
-  } catch (error) {
-    core.setFailed(`${file} is invalid\n${error.message}`);
-  }
-  return error;
+  await api.validate(file, options);
+  core.info(`${file} is valid`);
 }
