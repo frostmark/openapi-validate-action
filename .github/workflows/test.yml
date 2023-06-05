@@ -1,0 +1,21 @@
+name: Validate example API swagger documentation
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node 16
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'npm'
+    - name: Use local action
+      id: example
+      uses: ./
+      with:
+        directory: './test'
+    - name: Output export variable
+      run: |
+        echo ${{ steps.example.outputs.validFiles }}
+        echo ${{ steps.example.outputs.invalidFiles }}
